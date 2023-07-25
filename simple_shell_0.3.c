@@ -97,12 +97,14 @@ int num_arguments = 0;
 char *token = NULL;
 char *rest = command;
 
-while ((token = strtok_r(rest, " ", &rest)) != NULL && num_arguments < MAX_NUM_ARGUMENTS)
+while ((token = strtok_r(rest, " ", &rest)) != NULL &&
+	num_arguments < MAX_NUM_ARGUMENTS)
+
 {
 arguments[num_arguments++] = token;
 }
 
-return num_arguments;
+return (num_arguments);
 }
 
 /**
@@ -126,21 +128,21 @@ char *executable = malloc(strlen(dir) + strlen(command) + 2);
 if (executable == NULL)
 {
 perror("malloc() failed");
-return NULL;
+return (NULL);
 }
 
 sprintf(executable, "%s/%s", dir, command);
 
 if (access(executable, X_OK) == 0)
 {
-return executable;
+return (executable);
 }
 
 free(executable);
 dir = strtok(NULL, ":");
 }
 
-return NULL;
+return (NULL);
 }
 
 /**
