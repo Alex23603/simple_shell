@@ -36,7 +36,6 @@
 
 extern char **environ;
 
-
 /**
  * struct liststr - singly linked list
  * @num: the number field
@@ -51,10 +50,10 @@ typedef struct liststr
 } list_t;
 
 /**
- * struct passinfo - contains pseudo-arguements to pass into a function,
- * allowing uniform prototype for function pointer struct
- * @arg: a string generated from getline containing arguements
- * @argv:an array of strings generated from arg
+ * struct passinfo - contains pseudo-arguments to pass into a function,
+ * allowing a uniform prototype for the function pointer struct
+ * @arg: a string generated from getline containing arguments
+ * @argv: an array of strings generated from arg
  * @path: a string path for the current command
  * @argc: the argument count
  * @line_count: the error count
@@ -89,7 +88,7 @@ typedef struct passinfo
 	int env_changed;
 	int status;
 
-	char **cmd_buf; /* pointer to cmd ; chain buffer, for memory mangement */
+	char **cmd_buf; /* pointer to cmd ; chain buffer, for memory management */
 	int cmd_buf_type; /* CMD_type ||, &&, ; */
 	int readfd;
 	int histcount;
@@ -109,7 +108,6 @@ typedef struct builtin
 	char *type;
 	int (*func)(info_t *);
 } builtin_table;
-
 
 /* toem_shloop.c */
 int hsh(info_t *, char **);
@@ -168,7 +166,8 @@ int _atoi(char *);
 
 /* toem_errors1.c */
 int _erratoi(char *);
-void print_error(char *av, char *cmd, int count)
+void print_error(info_t *, char *);
+void print_number(int); /* New function prototype */
 int print_d(int, int);
 char *convert_number(long int, int, int);
 void remove_comments(char *);
@@ -232,4 +231,5 @@ int replace_alias(info_t *);
 int replace_vars(info_t *);
 int replace_string(char **, char *);
 
-#endif
+#endif /* _S*/
+
