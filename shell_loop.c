@@ -1,82 +1,39 @@
-/* shell_loop.c */
-
 #include "shell.h"
 
 /**
- * find_cmd - finds the full path of the command to execute
- * @info: the info struct
- */
-void find_cmd(info_t *info)
-{
-	char *cmd = "not found"; /* Assign the appropriate value to cmd */
-
-	/* Your implementation of find_cmd here */
-
-	print_error(info, cmd, 127);
-}
-
-/**
- * fork_cmd - forks the shell to execute a command
- * @info: the info struct
- */
-void fork_cmd(info_t *info)
-{
-	pid_t child_pid;
-
-	/* Your implementation of fork_cmd here */
-
-	if (child_pid == -1)
-	{
-		char *cmd = "Permission denied"; /* Assign the appropriate value to cmd */
-		print_error(info, cmd, 126);
-	}
-}
-
-/**
- * loophsh - main loop for the simple shell
- * @env: the current environment
+ * loophsh - Main loop for the shell.
+ * @env: Array of environment variables.
  *
- * Return: Always 0 on success
+ * Return: Always 0.
  */
 int loophsh(char **env)
 {
 	info_t info[] = { INFO_INIT };
-	size_t size;
-	char *line = NULL;
-	int status = 0;
+	ssize_t read_status;
 
-	/* Set up initial info */
-	set_info(info, env);
+	info->environ = env;
 
-	/* Loop for shell */
-	while (status != -1)
-	{
+	signal(SIGINT, sigintHandler);
+	if (!isatty(STDIN_FILENO))
+		info->linecount_flag = 0;
+	do {
 		if (isatty(STDIN_FILENO))
-			_putsfd("#cisfun$ ", STDERR_FILENO);
-
-		/* Read input line */
-		if (!get_input(info))
+			_puts("$ ");
+		clear_info(info);
+		read_status = get_input(info);
+		if (read_status == EOF)
+			break;
+		if (_strcmp(info->arg, "\n") == 0)
+			continue;
+		info->argv = strtow2(info->arg, " \t\r\n\a");
+		if (!info->argv)
 		{
 			free_info(info, 0);
 			break;
 		}
-
-		/* Tokenize input line */
-		info->argv = strtow2(info->arg, " \t\r\n\a");
-
-		if (!info->argv || !info->argv[0])
-		{
-			bfree((void **)&info->arg);
-			free_info(info, 1);
-			continue;
-		}
-
-		/* ... existing code ... */
-
-		/* Free allocated memory */
-		bfree((void **)&info->arg);
-		bfree((void **)&info->argv);
-	}
-	return (status);
+		if (find_builtin(info) == 0)
+			find_cmd(info);
+		free_info(info, 1);
+	} while (1);
+	return (info->status);
 }
-
