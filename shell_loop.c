@@ -114,6 +114,7 @@ void find_cmd(info_t *info)
 		else if (*(info->arg) != '\n')
 		{
 			info->status = 127;
+			char *cmd = "not found"; /*Assign the appropriate value to cmd*/
 			print_error(info, cmd, 127);
 		}
 	}
@@ -154,6 +155,7 @@ void fork_cmd(info_t *info)
 		{
 			info->status = WEXITSTATUS(info->status);
 			if (info->status == 126)
+				char *cmd = "Permission denied";/*Assign the appropriate value to cmd*/
 				print_error(info, cmd, 126);
 		}
 	}
