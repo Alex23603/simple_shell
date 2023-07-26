@@ -85,6 +85,7 @@ int find_builtin(info_t *info)
  */
 void find_cmd(info_t *info)
 {
+	char *cmd = "not found"; /* Assign the appropriate value to cmd */
 	char *path = NULL;
 	int i, k;
 
@@ -127,11 +128,16 @@ void find_cmd(info_t *info)
  * Return: void
  */
 void fork_cmd(info_t *info)
-{
+{	
+	char *cmd = "Permission denied"; /* Assign the appropriate value to cmd */
+	if (info->status == 126)
+	{
+	print_error(info, cmd, 126);
+	}
 	pid_t child_pid;
 
 	child_pid = fork();
-	if (child_pid == -1)
+	if (child_pid == -1)i
 	{
 		/* TODO: PUT ERROR FUNCTION */
 		perror("Error:");
