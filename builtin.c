@@ -20,7 +20,7 @@ void print_error(info_t *info, char *cmd, int count)
  * print_number - prints a number
  * @count: the number to print
  */
-static void print_number(int count)
+void print_number(int count)
 {
 	char c = count % 10 + '0';
 	int length = 0, num = count;

@@ -166,7 +166,7 @@ int _atoi(char *);
 
 /* toem_errors1.c */
 int _erratoi(char *);
-void print_error(info_t *, char *);
+void print_error(info_t *info, char *cmd, int count);
 void print_number(int); /* New function prototype */
 int print_d(int, int);
 char *convert_number(long int, int, int);
