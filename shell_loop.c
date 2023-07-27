@@ -1,37 +1,88 @@
 #include "shell.h"
 
 /**
- * loophsh - The main loop of the shell.
- * @environ: The array of environment variables.
- *
- * Return: 0 on success, otherwise 1.
+ * find_cmd - Find the appropriate command in the PATH
+ * @cmd: The command to find
+ * @path: The PATH environment variable
+ * Return: The full path of the command, or NULL if not found
  */
-int loophsh(char **environ)
+char *find_cmd(char *cmd, char *path)
 {
-	info_t info;
-	int exit_status = 0;
+	char **dirs, *full_path;
+	int i;
+	struct stat st;
 
-	set_info(&info, environ);
+	if (!path || !cmd)
+		return (NULL);
+
+	dirs = strtow(path, ":");
+	if (!dirs)
+		return (NULL);
+
+	full_path = malloc(PATH_MAX);
+	if (!full_path)
+	{
+		free_tokens(dirs);
+		return (NULL);
+	}
+
+	for (i = 0; dirs[i]; i++)
+	{
+		_memset(full_path, 0, PATH_MAX);
+		_strcat(full_path, dirs[i]);
+		_strcat(full_path, "/");
+		_strcat(full_path, cmd);
+
+		if (stat(full_path, &st) == 0)
+		{
+			free_tokens(dirs);
+			return (full_path);
+		}
+	}
+
+	free_tokens(dirs);
+	free(full_path);
+	return (NULL);
+}
+
+/**
+ * shell_loop - The shell's main loop
+ * @env: The environment variables
+ * Return: None
+ */
+void shell_loop(char **env)
+{
+	char *line, **tokens, *cmd;
+	int status;
 
 	do {
-		if (info.linecount_flag)
-			info.line_count++;
-
-		if (get_input(&info) == EOF)
+		_prompt();
+		line = _getline();
+		if (!line)
 			break;
 
-		if (info.arg[0] != '\n' && info.arg[0] != 0)
+		tokens = tokenize(line);
+		if (!tokens)
 		{
-			info.argv = strtow(info.arg, " \t\r\n\a");
-			if (info.argv == NULL)
-				continue;
-			find_cmd(&info);
+			free(line);
+			continue;
 		}
-		free_info(&info, 1);
-	} while (exit_status == 0);
 
-	free_info(&info, 1);
-	free_list(&(info.env));
+		cmd = find_cmd(tokens[0], _getenv("PATH", env));
+		if (cmd)
+		{
+			status = execute_cmd(cmd, tokens, env);
+			free(cmd);
+		}
+		else
+		{
+			print_error(tokens[0], "not found");
+			status = 127;
+		}
 
-	return (exit_status);
+		free_tokens(tokens);
+		free(line);
+	} while (status);
+
+	exit(status);
 }

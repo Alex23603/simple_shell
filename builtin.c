@@ -1,139 +1,109 @@
 #include "shell.h"
 
 /**
- * print_error - prints error messages
- * @info: the info struct
- * @cmd: the command that caused the error
- * @count: the error count
+ * print_error - Prints an error message to the standard error stream.
+ * @msg: The error message to print.
+ * @argv0: The name of the program (argv[0]) to include in the error message.
  */
-void print_error(info_t *info, char *cmd, int count)
+void print_error(const char *msg, const char *argv0)
 {
-	_putsfd(info->fname, 2);
-	_putsfd(": ", 2);
-	print_number(count); /* Fixed: Add the correct function call */
-	_putsfd(": ", 2);
-	_putsfd(cmd, 2);
-	_putsfd(": not found\n", 2);
+	_puts(argv0);
+	_puts(": ");
+	_puts(msg);
+	_puts("\n");
 }
 
 /**
- * print_number - prints a number
- * @count: the number to print
+ * print_number - Prints a number to the standard output stream.
+ * @n: The number to print.
  */
-void print_number(int count)
+void print_number(int n)
 {
-	char c = count % 10 + '0';
-	int length = 0, num = count;
+	char buffer[20];
+	int i = 0, is_negative = 0;
 
-	while (num != 0)
+	if (n == 0)
 	{
-		num /= 10;
-		length++;
+		_putchar('0');
+		return;
 	}
-	if (count > 9)
-		_putfd((count / 10) + '0', 2);
-	_putfd(c, 2);
+
+	if (n < 0)
+	{
+		is_negative = 1;
+		n = -n;
+	}
+
+	while (n != 0)
+	{
+		buffer[i++] = n % 10 + '0';
+		n /= 10;
+	}
+
+	if (is_negative)
+		_putchar('-');
+
+	while (--i >= 0)
+		_putchar(buffer[i]);
 }
 
 /**
- * _myexit - exit built-in command
- * @info: the info struct
- * Return: always returns 1, to continue execution
+ * _myexit - The implementation of the exit built-in command.
+ * @args: The arguments passed to the exit command (should be empty).
+ * @env: The current environment variables.
+ * Return: 0 on success, -1 on failure.
  */
-int _myexit(info_t *info)
+int _myexit(char **args, char **env)
 {
-	int status = 0;
+	(void)env;
 
-	if (info->argv[1])
+	if (!args[1])
+		exit(EXIT_SUCCESS);
+
+	if (_atoi(args[1]) == -1)
 	{
-		status = _erratoi(info->argv[1]);
-		if (status < 0)
-		{
-			info->err_num = 2;
-			print_error(info, info->argv[0], info->line_count);
-			return (1);
-		}
+		print_error("Illegal number: ", args[0]);
+		return (-1);
 	}
 
-	free_info(info, 1);
-	free_list(&(info->env));
-	free_list(&(info->history));
-	free_list(&(info->alias));
-	free_list(&(info->env));
-	if (info->cmd_buf)
-	{
-		while (*(info->cmd_buf))
-			free(*((info->cmd_buf)++));
-		free(info->cmd_buf);
-	}
-	exit(status);
-	return (1);
+	exit(_atoi(args[1]));
 }
 
 /**
- * _mycd - change directory built-in command
- * @info: the info struct
- * Return: always returns 1, to continue execution
+ * _mycd - The implementation of the cd built-in command.
+ * @args: The arguments passed to the cd command.
+ * @env: The current environment variables.
+ * Return: 0 on success, -1 on failure.
  */
-int _mycd(info_t *info)
+int _mycd(char **args, char **env)
 {
-	char *home = _getenv(info, "HOME");
-	char *oldpwd = _getenv(info, "OLDPWD");
-	char *pwd = _getenv(info, "PWD");
-	char *dest;
+	char *new_dir;
 
-	if (info->argc > 2)
+	if (args[1] == NULL)
+		new_dir = _getenv("HOME", env);
+	else if (_strcmp(args[1], "-") == 0)
 	{
-		info->err_num = 2;
-		print_error(info, info->argv[0], info->line_count);
-		return (1);
+		new_dir = _getenv("OLDPWD", env);
+		_puts(new_dir);
+		_puts("\n");
 	}
-
-	if (info->argv[1] == NULL || _strcmp(info->argv[1], "~") == 0)
-		dest = home;
-	else if (_strcmp(info->argv[1], "-") == 0)
-		dest = oldpwd;
 	else
-		dest = info->argv[1];
+		new_dir = args[1];
 
-	if (chdir(dest) == -1)
+	if (!new_dir)
 	{
-		info->err_num = 2;
-		print_error(info, info->argv[0], info->line_count);
-		return (1);
+		print_error("No HOME variable in the environment", args[0]);
+		return (-1);
 	}
 
-	if (dest == home)
-		dest = _getenv(info, "PWD");
-	if (dest == oldpwd)
+	if (chdir(new_dir) != 0)
 	{
-		dest = pwd;
-		printf("%s\n", dest);
+		print_error("can't cd to ", args[0]);
+		return (-1);
 	}
-	_setenv(info, "OLDPWD", pwd);
-	_setenv(info, "PWD", dest);
 
-	return (1);
-}
+	_setenv("OLDPWD", _getenv("PWD", env), &env);
+	_setenv("PWD", new_dir, &env);
 
-/**
- * _myhelp - help built-in command
- * @info: the info struct
- * Return: always returns 1, to continue execution
- */
-int _myhelp(info_t *info)
-{
-	(void)info;
-	_puts("Type programs to run them.\n");
-	_puts("Commands:\n");
-	_puts("  help\n");
-	_puts("  exit\n");
-	_puts("  cd [DIR]\n");
-	_puts("  env\n");
-	_puts("  setenv [VAR] [VALUE]\n");
-	_puts("  unsetenv [VAR]\n");
-	_puts("  history\n");
-	_puts("  alias [NAME[='VALUE'] ...]\n");
-	_puts("  history\n");
-	return (1);
+	return (0);
 }
