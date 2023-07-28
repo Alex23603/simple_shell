@@ -1,67 +1,57 @@
 #include "shell.h"
 
 /**
- * _eputs - Prints a string to the standard error stream.
- * @str: The string to print.
- */
-void _eputs(const char *str)
-{
-	write(STDERR_FILENO, str, _strlen(str));
-}
-
-/**
- * _eputchar - Prints a character to the standard error stream.
- * @c: The character to print.
- */
-void _eputchar(char c)
-{
-	write(STDERR_FILENO, &c, 1);
-}
-
-/**
- * hsh - Shell's main function.
- */
-void hsh(void)
-{
-	char *line;
-	int status;
-
-	do {
-		_eputs("#cisfun$ ");
-		line = _getline();
-		status = process_line(line);
-		free(line);
-	} while (status);
-
-	_eputchar('\n');
-}
-
-/**
- * process_line - Processes a line of input from the user.
- * @line: The input line.
+ * main - entry point
+ * jfieruhfiuheiieriue
+ * dvnjviuhivbdhbferif
+ * dfhbvudhvbu
+ * sushgbirjnnrv
+ * dfvyeryguyergyuegferfeufgu yfgeuygfuegrfuryfg eurfguefyeur
+ * fbehuerfuefguyegyrfeurfyg
  *
- * Return: 0 if the shell should continue, 1 if the shell should exit.
- */
-int process_line(char *line)
-{
-	/* Add the implementation of processing the command here */
-
-	/* For now, let's exit the shell if the user enters "exit" */
-	if (_strncmp(line, "exit", 4) == 0)
-		return (0);
-
-	return (1);
-}
-/**
- * main - Entry point for the simple shell program.
+ * eurgyerufuyegrr ruefueife
+ * feufueyfuyefbferu
+ * efhiweufhiwueiwoweuryrtbjbchb
+ * eweuywdbhdbwyrewhuwebw
+ * wewiewedwhwebjrweuwnhwerw
+ * wfbeferiheruiu
+ * @ac: arg count
+ * @av: arg vector
  *
- * Description: This function initializes the shell and enters the main loop
- *              to read commands from the user and execute them.
- *
- * Return: Always 0.
+ * Return: 0 on success, 1 on error
  */
-int main(void)
+int main(int ac, char **av)
 {
-	hsh();
-	return (0);
+	info_t info[] = { INFO_INIT };
+	int fd = 2;
+
+	asm ("mov %1, %0\n\t"
+		"add $3, %0"
+		: "=r" (fd)
+		: "r" (fd));
+
+	if (ac == 2)
+	{
+		fd = open(av[1], O_RDONLY);
+		if (fd == -1)
+		{
+			if (errno == EACCES)
+				exit(126);
+			if (errno == ENOENT)
+			{
+				_eputs(av[0]);
+				_eputs(": 0: Can't open ");
+				_eputs(av[1]);
+				_eputchar('\n');
+				_eputchar(BUF_FLUSH);
+				exit(127);
+			}
+			return (EXIT_FAILURE);
+		}
+		info->readfd = fd;
+	}
+	populate_env_list(info);
+	read_history(info);
+	hsh(info, av);
+	return (EXIT_SUCCESS);
 }

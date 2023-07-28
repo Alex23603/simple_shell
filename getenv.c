@@ -1,9 +1,14 @@
 #include "shell.h"
 
 /**
- * get_environ - returns the string array copy of our environ
+ * get_environ - returns the string
+ * array copy of our environ
+ *	huvreuuerfueuuerhugbuherbucbue
+ *	uheurhfueuucusbuueygfujchef
+ *efkjwehbfuwefuubuwebufw
+ *	ebbcbuen
  * @info: Structure containing potential arguments. Used to maintain
- *          constant function prototype.
+ *          constant function protype.
  * Return: Always 0
  */
 char **get_environ(info_t *info)
@@ -55,6 +60,9 @@ int _unsetenv(info_t *info, char *var)
  * @info: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
  * @var: the string env var property
+ * hbrueugdceuhefh eufhiuhfiuweiwf ieuhi
+ * ehbfuwuebfufuwfub fewndjew
+ * jfvuhe eruuerfu uferueru rugerufeurf rfeu
  * @value: the string env var value
  *  Return: Always 0
  */

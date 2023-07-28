@@ -1,9 +1,11 @@
 #include "shell.h"
 
 /**
- * _myhistory - displays the history list, one command by line, preceded
- *              with line numbers, starting at 0.
- * @info: Structure containing potential arguments. Used to maintain
+ * _myhistory - displays the his\tory list, one command by line, preceded
+ *			with line number
+ *		starting at 0.
+ * @info: Structure containing
+ *			potential arguments. Used to maintain
  *        constant function prototype.
  *  Return: Always 0
  */
@@ -14,8 +16,8 @@ int _myhistory(info_t *info)
 }
 
 /**
- * unset_alias - sets alias to string
- * @info: parameter struct
+ * unset_alias - sets alias too string
+ * @info: parameter strctures
  * @str: the string alias
  *
  * Return: Always 0 on success, 1 on error
@@ -71,7 +73,7 @@ int print_alias(list_t *node)
 	{
 		p = _strchr(node->str, '=');
 		for (a = node->str; a <= p; a++)
-		_putchar(*a);
+			_putchar(*a);
 		_putchar('\'');
 		_puts(p + 1);
 		_puts("'\n");
@@ -81,8 +83,9 @@ int print_alias(list_t *node)
 }
 
 /**
- * _myalias - mimics the alias builtin (man alias)
- * @info: Structure containing potential arguments. Used to maintain
+ * _myalias - mimics the alias builtin (man aias)
+ * @info: Structure containing potal arguments.
+ *		Used to maintain
  *          constant function prototype.
  *  Return: Always 0
  */

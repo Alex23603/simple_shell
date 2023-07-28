@@ -2,6 +2,8 @@
 
 /**
  * clear_info - initializes info_t struct
+ * jnrhgurerbjbdjwhbuwbewy
+ * nfjiuh iwuehiuwehriuweu ie
  * @info: struct address
  */
 void clear_info(info_t *info)
@@ -13,7 +15,14 @@ void clear_info(info_t *info)
 }
 
 /**
- * set_info - initializes info_t struct
+ * set_info - initializes info_t struc
+ * jrgieurguhe hfureureh fuhf
+ * jsdhufhirbeibwjrgiruvbyr
+ * jeriuwhiiweiuhdwieuhirhiwidiwhiwiuiwuehur
+ * nweiurhwihw iruwehruerwi wieiwirwieuriweurwe
+ * ehriwuhiuewe3heuhfuhrbtiudiie
+ * dhieuhriuwehrhehiueirwieeiweui
+ * rwhierweuwjeriu3
  * @info: struct address
  * @av: argument vector
  */
@@ -27,6 +36,7 @@ void set_info(info_t *info, char **av)
 		info->argv = strtow(info->arg, " \t");
 		if (!info->argv)
 		{
+
 			info->argv = malloc(sizeof(char *) * 2);
 			if (info->argv)
 			{
@@ -46,6 +56,10 @@ void set_info(info_t *info, char **av)
 /**
  * free_info - frees info_t struct fields
  * @info: struct address
+ *	cberuueruhfurhuryrge
+ *	erfuerufeurygueyreurgejhdfuy
+ *	efeufwueuwehiwueiduwueiiewhf
+ *	ntrughrirueheif
  * @all: true if freeing all fields
  */
 void free_info(info_t *info, int all)

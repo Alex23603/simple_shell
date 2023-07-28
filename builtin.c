@@ -1,109 +1,101 @@
 #include "shell.h"
 
 /**
- * print_error - Prints an error message to the standard error stream.
- * @msg: The error message to print.
- * @argv0: The name of the program (argv[0]) to include in the error message.
+ * _myexit - exits the shell
+ * @info: Structure containing potential arguments.
+ *		Used to maintain
+ *          constant function prototype.
+ *  Return: exits with a given exit status
+ *         (0) if info.argv[0] != "exit"
  */
-void print_error(const char *msg, const char *argv0)
+int _myexit(info_t *info)
 {
-	_puts(argv0);
-	_puts(": ");
-	_puts(msg);
-	_puts("\n");
+	int exitcheck;
+
+	if (info->argv[1])  /* If there is an exit arguement */
+	{
+		exitcheck = _erratoi(info->argv[1]);
+		if (exitcheck == -1)
+		{
+			info->status = 2;
+			print_error(info, "Illegal number: ");
+			_eputs(info->argv[1]);
+			_eputchar('\n');
+			return (1);
+		}
+		info->err_num = _erratoi(info->argv[1]);
+		return (-2);
+	}
+	info->err_num = -1;
+	return (-2);
 }
 
 /**
- * print_number - Prints a number to the standard output stream.
- * @n: The number to print.
+ * _mycd - changes the current directory of the process
+ *@info: Structure containing potential arguments.
+ *		Used to maintain
+ *          constant function prototype.
+ *  Return: Always 0
  */
-void print_number(int n)
+int _mycd(info_t *info)
 {
-	char buffer[20];
-	int i = 0, is_negative = 0;
+	char *s, *dir, buffer[1024];
+	int chdir_ret;
 
-	if (n == 0)
+	s = getcwd(buffer, 1024);
+	if (!s)
+		_puts("TODO: >>getcwd failure emsg here<<\n");
+	if (!info->argv[1])
 	{
-		_putchar('0');
-		return;
+		dir = _getenv(info, "HOME=");
+		if (!dir)
+			chdir_ret = /* TODO: what should this be? */
+				chdir((dir = _getenv(info, "PWD=")) ? dir : "/");
+		else
+			chdir_ret = chdir(dir);
 	}
-
-	if (n < 0)
+	else if (_strcmp(info->argv[1], "-") == 0)
 	{
-		is_negative = 1;
-		n = -n;
-	}
-
-	while (n != 0)
-	{
-		buffer[i++] = n % 10 + '0';
-		n /= 10;
-	}
-
-	if (is_negative)
-		_putchar('-');
-
-	while (--i >= 0)
-		_putchar(buffer[i]);
-}
-
-/**
- * _myexit - The implementation of the exit built-in command.
- * @args: The arguments passed to the exit command (should be empty).
- * @env: The current environment variables.
- * Return: 0 on success, -1 on failure.
- */
-int _myexit(char **args, char **env)
-{
-	(void)env;
-
-	if (!args[1])
-		exit(EXIT_SUCCESS);
-
-	if (_atoi(args[1]) == -1)
-	{
-		print_error("Illegal number: ", args[0]);
-		return (-1);
-	}
-
-	exit(_atoi(args[1]));
-}
-
-/**
- * _mycd - The implementation of the cd built-in command.
- * @args: The arguments passed to the cd command.
- * @env: The current environment variables.
- * Return: 0 on success, -1 on failure.
- */
-int _mycd(char **args, char **env)
-{
-	char *new_dir;
-
-	if (args[1] == NULL)
-		new_dir = _getenv("HOME", env);
-	else if (_strcmp(args[1], "-") == 0)
-	{
-		new_dir = _getenv("OLDPWD", env);
-		_puts(new_dir);
-		_puts("\n");
+		if (!_getenv(info, "OLDPWD="))
+		{
+			_puts(s);
+			_putchar('\n');
+			return (1);
+		}
+		_puts(_getenv(info, "OLDPWD=")), _putchar('\n');
+		chdir_ret = /* TODO: what should this be? */
+			chdir((dir = _getenv(info, "OLDPWD=")) ? dir : "/");
 	}
 	else
-		new_dir = args[1];
-
-	if (!new_dir)
+		chdir_ret = chdir(info->argv[1]);
+	if (chdir_ret == -1)
 	{
-		print_error("No HOME variable in the environment", args[0]);
-		return (-1);
+		print_error(info, "can't cd to ");
+		_eputs(info->argv[1]), _eputchar('\n');
 	}
-
-	if (chdir(new_dir) != 0)
+	else
 	{
-		print_error("can't cd to ", args[0]);
-		return (-1);
+		_setenv(info, "OLDPWD", _getenv(info, "PWD="));
+		_setenv(info, "PWD", getcwd(buffer, 1024));
 	}
+	return (0);
+}
 
-	_setenv("OLDPWD", _getenv("PWD", env), &env);
-	_setenv("PWD", new_dir, &env);
+/**
+ *_myhelp - this changese the current directory
+ *		of the process
+ *@info: Structure containing potential arguments.
+ *		 Used to maintain
+ *          constant function prototype.
+ *Return: Always 0
+ */
+int _myhelp(info_t *info)
+{
+	char **arg_array;
 
+	arg_array = info->argv;
+	_puts("help call works. Function not yet implemented \n");
+	if (0)
+		_puts(*arg_array); /* temp att_unused workaround */
 	return (0);
 }

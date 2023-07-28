@@ -2,6 +2,13 @@
 
 /**
  * _strcpy - copies a string
+ * chuihcuihsucueuwewyfgyrtbf
+ * fberfyryfuefuegvfuhujs
+ * sdfuysfguguyuygufysygfuubhfejhb
+ * ywgruwgryueygyuwegdwdw
+ * uyfguerfyegfe
+ * fueyfyerfguyergfr
+ *
  * @dest: the destination
  * @src: the source
  *
@@ -25,6 +32,12 @@ char *_strcpy(char *dest, char *src)
 /**
  * _strdup - duplicates a string
  * @str: the string to duplicate
+ * cvgscudhsucjdbchhdsyvsh
+ * hbjsdhcjjhsdsyhehhj
+ * hcshduybejhiwjkjdnb
+ * jsdhichdvfgjfsiop
+ * bhjbdchbcdsub
+ * bhfuyfeyryruweoo
  *
  * Return: pointer to the duplicated string
  */
@@ -46,8 +59,12 @@ char *_strdup(const char *str)
 }
 
 /**
- * _puts - prints an input string
- * @str: the string to be printed
+ *_puts - prints an input string
+ *@str: the string to be printe
+ *huiuewhuhwuheruhwuhduweuuiurhid
+ *weiduhbuirufiregfheu
+ *cduysgcugcsduyguysduycguysgduycgsydcs
+ *dhfugfeufuyuybbu
  *
  * Return: Nothing
  */
@@ -65,7 +82,15 @@ void _puts(char *str)
 }
 
 /**
- * _putchar - writes the character c to stdout
+ * _putchar - writes the cacter c to stdout
+ * duihuewiuihuhwurihwuiwuhiu
+ * dugweygdugweydguweygrugr
+ * wgeybduhudwueyuwhhbeywr
+ * wdwyueygwdugweugdwe
+ * dwewrgweyuyewgduvduyewvduvuewvduweuydvuwyee
+ * edbuyedyuwegduwueyduwebrwuyd
+ * ewyurwyegyuweuyrguygygruwgeuryegygydgydw
+ * dweduywuedywedgwyeuyubwduyer
  * @c: The character to print
  *
  * Return: On success 1.

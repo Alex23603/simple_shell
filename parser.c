@@ -1,7 +1,14 @@
 #include "shell.h"
 
 /**
- * is_cmd - determines if a file is an executable command
+ * is_cmd - determines if a file is an executable comman
+ * jehwirhuwehiurhwihiibbibfrbe
+ * erfguyegruyfrege fuyegfuyegrufygeuryffeuu
+ * hfieurfeurgfuegrfgeyfguyegrufygerf
+ * eferyfgueyrfgerfueyyfgefe
+ * ferfgeuyfuegrfuge
+ *
+ *uhurgteriuhuhiui
  * @info: the info struct
  * @path: path to the file
  *
@@ -28,6 +35,11 @@ int is_cmd(info_t *info, char *path)
  * @start: starting index
  * @stop: stopping index
  *
+ * huefuryfguyegurgfegfggf
+ * fbeuwfwyeugfywgeuywberwye
+ * werywugruwyuyeguywgerywgue
+ * ewyweuyuwegrywwer
+ *
  * Return: pointer to new buffer
  */
 char *dup_chars(char *pathstr, int start, int stop)
@@ -43,7 +55,15 @@ char *dup_chars(char *pathstr, int start, int stop)
 }
 
 /**
- * find_path - finds this cmd in the PATH string
+ * find_path - finds this cmd in the PATH strin
+ * dvihiuher ferufuyeurgue reryfuyrefuygf
+ * furefuehfhieurhfieoferfihrf
+ * erfefuefuefugvef
+ * erfeberbfrf
+ * ervffefyeryfef
+ *
+ * ffyufuerufyerfe
+ * fefefye
  * @info: the info struct
  * @pathstr: the PATH string
  * @cmd: the cmd to find

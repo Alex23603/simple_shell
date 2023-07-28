@@ -1,119 +1,152 @@
 #include "shell.h"
 
 /**
- * _putsfd - Prints a string to a specific file descriptor.
- * @str: The input string to print.
- * @fd: The file descriptor to write to.
+ * get_history_file - gets the history file
+ * @info: parameter struct
+ * nvfuihvuheruheiuh eiuh
+ * dfuhidusiudfiusdiuuer ieruhfeiu
+ * ufheruf rufhierfiu ferufhiurfhiueh
+ *
+ * Return: allocated string containg history file
  */
-void _putsfd(char *str, int fd)
-{
-	ssize_t len = _strlen(str);
 
-	write(fd, str, len);
+char *get_history_file(info_t *info)
+{
+	char *buf, *dir;
+
+	dir = _getenv(info, "HOME=");
+	if (!dir)
+		return (NULL);
+	buf = malloc(sizeof(char) * (_strlen(dir) + _strlen(HIST_FILE) + 2));
+	if (!buf)
+		return (NULL);
+	buf[0] = 0;
+	_strcpy(buf, dir);
+	_strcat(buf, "/");
+	_strcat(buf, HIST_FILE);
+	return (buf);
 }
 
 /**
- * print_error - Prints errors related to built-in commands.
- * @argv0: The name of the program.
- * @cmd: The command that caused the error.
- * @count: The command counter.
+ * write_history - creates a file, or appends to an existing file
+ * @info: the parameter struct
+ *
+ * Return: 1 on success, else -1
  */
-void print_error(char *argv0, char *cmd, int count)
+int write_history(info_t *info)
 {
-	char error_msg[1024];
+	ssize_t fd;
+	char *filename = get_history_file(info);
+	list_t *node = NULL;
 
-	sprintf(error_msg, "%s: %d: %s: not found\n", argv0, count, cmd);
-	_putsfd(error_msg, STDERR_FILENO);
+	if (!filename)
+		return (-1);
+
+	fd = open(filename, O_CREAT | O_TRUNC | O_RDWR, 0644);
+	free(filename);
+	if (fd == -1)
+		return (-1);
+	for (node = info->history; node; node = node->next)
+	{
+		_putsfd(node->str, fd);
+		_putfd('\n', fd);
+	}
+	_putfd(BUF_FLUSH, fd);
+	close(fd);
+	return (1);
 }
 
 /**
- * print_number - Prints a number to the standard output stream.
- * @n: The number to print.
+ * read_history - reads history from file
+ * @info: the parameter struct
+ *
+ * Return: histcount on success, 0 otherwise
  */
-void print_number(int n)
+int read_history(info_t *info)
 {
-	char buffer[20];
-	int i, j, digit, neg;
+	int i, last = 0, linecount = 0;
+	ssize_t fd, rdlen, fsize = 0;
+	struct stat st;
+	char *buf = NULL, *filename = get_history_file(info);
 
-	if (n == 0)
-	{
-		_putchar('0');
-		return;
-	}
+	if (!filename)
+		return (0);
 
-	if (n < 0)
-	{
-		neg = 1;
-		n = -n;
-	}
-
-	while (n != 0)
-	{
-		digit = n % 10;
-		buffer[i++] = digit + '0';
-		n /= 10;
-	}
-
-	if (neg)
-		buffer[i++] = '-';
-
-	for (j = i - 1; j >= 0; j--)
-		_putchar(buffer[j]);
+	fd = open(filename, O_RDONLY);
+	free(filename);
+	if (fd == -1)
+		return (0);
+	if (!fstat(fd, &st))
+		fsize = st.st_size;
+	if (fsize < 2)
+		return (0);
+	buf = malloc(sizeof(char) * (fsize + 1));
+	if (!buf)
+		return (0);
+	rdlen = read(fd, buf, fsize);
+	buf[fsize] = 0;
+	if (rdlen <= 0)
+		return (free(buf), 0);
+	close(fd);
+	for (i = 0; i < fsize; i++)
+		if (buf[i] == '\n')
+		{
+			buf[i] = 0;
+			build_history_list(info, buf + last, linecount++);
+			last = i + 1;
+		}
+	if (last != i)
+		build_history_list(info, buf + last, linecount++);
+	free(buf);
+	info->histcount = linecount;
+	while (info->histcount-- >= HIST_MAX)
+		delete_node_at_index(&(info->history), 0);
+	renumber_history(info);
+	return (info->histcount);
 }
 
 /**
- * add_history - Adds a command to the shell history.
- * @history: The history struct.
- * @command: The command to add.
+ * build_history_list - adds entry to a history linked list
+ * uehriuerhfier
+ * @info: Structure containing potential arguments. Used to maintain
+ * @buf: buffer
+ * @linecount: the history linecount, histcount
+ *
+ * Return: Always 0
  */
-void add_history(history_t *history, char *command)
+int build_history_list(info_t *info, char *buf, int linecount)
 {
-	history_t *new_node, *temp;
+	list_t *node = NULL;
 
-	if (!command || !history)
-		return;
+	if (info->history)
+		node = info->history;
+	add_node_end(&node, buf, linecount);
 
-	new_node = malloc(sizeof(history_t));
-	if (!new_node)
-		return;
-
-	new_node->command = _strdup(command);
-	new_node->next = NULL;
-
-	if (!history->history)
-	{
-		history->history = new_node;
-		history->count = 1;
-	}
-	else
-	{
-		temp = history->history;
-		while (temp->next)
-			temp = temp->next;
-
-		temp->next = new_node;
-		history->count++;
-	}
+	if (!info->history)
+		info->history = node;
+	return (0);
 }
 
 /**
- * free_history - Frees the memory allocated for the shell history.
- * @history: The history struct.
+ * renumber_history - renumbers the history linked list after changes
+ * ferfeuyrfgbuerfueygeuueguygs
+ * fhuifhuheriufhieurhugiefruefie
+ * efheriuferfeyfegfyrherf
+ * ferfuyerfueyrfgueyfuehrea
+ * ueryuwegruye
+ * @info: Structure containing potential arguments. Used to maintain
+ *
+ * Return: the new histcount
  */
-void free_history(history_t *history)
+int renumber_history(info_t *info)
 {
-	history_t *temp;
+	list_t *node = info->history;
+	int i = 0;
 
-	if (!history)
-		return;
-
-	while (history->history)
+	while (node)
 	{
-		temp = history->history;
-		history->history = history->history->next;
-		free(temp->command);
-		free(temp);
+		node->num = i++;
+		node = node->next;
 	}
-
-	free(history);
+	return (info->histcount = i);
 }

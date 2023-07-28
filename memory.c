@@ -2,6 +2,17 @@
 
 /**
  * bfree - frees a pointer and NULLs the address
+ *
+ * ugufuhf uerfguygufergf efer
+ * fuerufuryfuygfuygyfueygrfuguy ufefegruygeurfg
+ * fgyfufgurgfuyrgfuegfuyerfyrfefi
+ * efrburyryf frufygryufgrf rufyeurfygreufygruf fr
+ *
+ * hferfehrferjfhfhjfuefe
+ * eferbfbfhrfb
+ * rfjrefhuie
+ * rrufueyrfyefuyerfuyerfyergfuye
+ *
  * @ptr: address of the pointer to free
  *
  * Return: 1 if freed, otherwise 0.

@@ -97,6 +97,11 @@ size_t print_list_str(const list_t *h)
 /**
  * delete_node_at_index - deletes node at given index
  * @head: address of pointer to first node
+ * fehfuheuhfuihiuifuhiuhiushhfiueiuf
+ * heirfhieuhrfihiuhifuhiufhehrfie
+ * eruhfiehfiehif
+ * erhufhuef
+ * feurfheiurhfe
  * @index: index of node to delete
  *
  * Return: 1 on success, 0 on failure
@@ -136,6 +141,13 @@ int delete_node_at_index(list_t **head, unsigned int index)
 
 /**
  * free_list - frees all nodes of a list
+ * uhiughergerg
+ * feiruhfiuerhufhr
+ * herfuiehrifuheirfoeruferfheihf
+ * fehruhfieurfierhfieuhf
+ * ahiuhiuhishihiure
+ * feruifuheruhf
+ * shfururfuehrfuherfhurfhieuhihfihrfeurfiu
  * @head_ptr: address of pointer to head node
  *
  * Return: void

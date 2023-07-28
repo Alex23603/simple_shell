@@ -1,7 +1,8 @@
 #include "shell.h"
 
 /**
- * _eputs - prints an input string
+ *_eputs - prints an input string
+ *		buehrbuhvrbvuhdbhuvbuhbvwbrigwk
  * @str: the string to be printed
  *
  * Return: Nothing
@@ -21,6 +22,7 @@ void _eputs(char *str)
 
 /**
  * _eputchar - writes the character c to stderr
+ *		fjblivrtwivirtbvirtbiht
  * @c: The character to print
  *
  * Return: On success 1.
@@ -43,7 +45,9 @@ int _eputchar(char c)
 
 /**
  * _putfd - writes the character c to given fd
+ *		dhbuhbufrferruhbuhvbhdbveryeuyfyr
  * @c: The character to print
+ *		DBBEBFBAIBVIBDVBDVHERGIJIABIRU
  * @fd: The filedescriptor to write to
  *
  * Return: On success 1.
@@ -65,8 +69,9 @@ int _putfd(char c, int fd)
 }
 
 /**
- * _putsfd - prints an input string
+ *_putsfd - prints an input string
  * @str: the string to be printed
+ *		dhuhvhchHUCVHVUHVCUHWVUHWVUHEwh
  * @fd: the filedescriptor to write to
  *
  * Return: the number of chars put
@@ -83,3 +88,4 @@ int _putsfd(char *str, int fd)
 	}
 	return (i);
 }
+
